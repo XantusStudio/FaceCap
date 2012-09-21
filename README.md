@@ -1,9 +1,7 @@
-FaceCap v1.3.4
+FaceCap
 ====
-2012 Xantus S.A.
 
-
-# INTRO
+####INTRO
 
 FaceCap is realtime motion capture server for Autodesk Maya, developed in 
 Xantus S.A. Animation Studio. This software uses OpenCV features to capture,
@@ -11,24 +9,28 @@ filter and track markers from camera. Data is send to Maya using external
 server technique. <b>This is more Proof-Of-Concept</b> than usefull tool.
 
 
-## REQUIREMENTS
+####REQUIREMENTS
 
 To build and use this software you need:
 * <b>Linux</b> workstation
 * Autodesk Maya 2011
 * OpenCV 2.3.2
 * webcam (or any video caputure device handled by OpenCV)
+
 We've tested it with:
 * Maya 2011.5-x64
-running on:
+
+Running on:
 * Ubuntu 10.10 (x64)
 * Fedora 14 (x64)
+
 with cameras:
 * Logitech HD Webcam C270
 * Logitech Webcam Pro 9000
+
 Details on building are in doc/INSTALL.txt file.
 
-## FEATURES
+###FEATURES
 
 * Tracking color based markers from camera device.
 * No need to use helmet for face capturing. All markers positions are relative 
@@ -36,10 +38,11 @@ Details on building are in doc/INSTALL.txt file.
   you can shift head up/down or left/right without messing the markers 
   coordinates. But be ceareful with radial moves :)
 * Realtime data flow.
+
 How to use instructions are (will be) in doc/using.html file.
 
 
-## LIMITATIONS
+####LIMITATIONS
 
 As mentioned above this is <b>POC</b>. Main goal was to capture a frame, get 
 interesting data and send it to Maya in *realtime*. Only one camera device is 
@@ -48,7 +51,7 @@ perspective,radial movements etc). FaceCap has never been tested with Microsoft
 Windows enviroment.
 
 
-## PACKAGE CONTENTS
+####PACKAGE CONTENTS
 ````
 AUTHORS.txt		Hall of fame :)
 build_all.sh	Small bash script used to compile sources and link binaries.
@@ -65,22 +68,18 @@ FC_opencv.h
 GPLv3.txt		License.
 main.c			Main loop.
 README.md		Self-explaining :)
-doc/
 doc/INSTALL.txt		Building instructions.
-doc/using.html		HTML formated user guide.
-doc/index.html		HTML formated menu.
-doc/gfx/*		Images ^^
 mel/*			Sample MEL scripts and Maya scenes.
 ````
 
-## LICENSING
+####LICENSING
 
 FaceCap is released under GNU General Public License v3. Details in GPLv3.txt 
 file.
 
-## EXTRA INFOS AND LINKS
+####EXTRA INFOS AND LINKS
 
 Maya is registered trademark of Autodesk, Inc. Details on product's web page: 
 http://usa.autodesk.com/maya/
 
-
+######2012 Xantus S.A.
