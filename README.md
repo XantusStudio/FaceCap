@@ -8,6 +8,7 @@ Xantus S.A. Animation Studio. This software uses OpenCV features to capture,
 filter and track markers from camera. Data is send to Maya using external 
 server technique. <b>This is more Proof-Of-Concept</b> than usefull tool.
 
+[EXAMPLE USE](http://youtu.be/-cB8vS6rUbY)
 
 ####REQUIREMENTS
 
