@@ -1,6 +1,6 @@
- FaceCap v1.3.4
- ==============
- 2012 Xantus S.A.
+FaceCap v1.3.4
+====
+2012 Xantus S.A.
 
 
 # INTRO
