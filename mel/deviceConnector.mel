@@ -1,0 +1,120 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////    AUTOR(S):                                                                                         ////
+////                                                                                                      ////
+////    Aleksander Marhall    -    aleksander.marhall@xantus.pl                                           ////
+////                                                                                                      ////
+////******************************************************************************************************////
+////                                                                                                      ////
+////    INFO:                                                                                             ////
+////                                                                                                      ////    
+////    With this script you can:                                                                         ////
+////                                                                                                      ////
+////    - connect to FaceCap server;                                                                      ////
+////    - create and scale locators equivalent to server attributes;                                      ////
+////    - record motion of locators;                                                                      ////
+////                                                                                                      ////
+////    This example script is prepared to work with FaceCap server.                                      ////
+////    It means that some parts of code are not universal (for ex. attaching and mapping                 ////
+////    device axes). Device axes are specified in a script (px##,py##).                                  ////
+////    But you can easily modify axes name to fit your devise. (check: listInputDeviceAxes).             ////
+////    Most parts of this code will work with other devices without any problems (for ex. recording).    ////
+////                                                                                                      ////
+////    Have Fun !!! :)                                                                                   ////
+////                                                                                                      ////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if(`window -exists deviceConnectWindow`) deleteUI deviceConnectWindow;
+
+window -title "Device Connector" -rtf true -s false deviceConnectWindow;
+
+columnLayout -adj true;
+    
+    frameLayout -l "Connect to Device" -cl false -bv true -bs "in" -cll false;
+        rowLayout -nc 4;
+            text -label "Device Name";
+            textField -text "program" deviceName;
+            button -label "Connect" -command ("connectToDevice(`textField -query -text deviceName`)");
+            button -label "Disconnect" -command ("disconnectDevice(`textField -query -text deviceName`)");
+        setParent..;
+    setParent..;
+    
+    frameLayout -l "Create Points" -cl false -bv true -bs "in" -cll false;
+    
+        rowLayout -nc 3;
+            text -label "Scale (for points)";    
+            floatField -value 1.0 attributesScale;
+            button -label "Create pointers" -command ("createDeviceAttributes(`textField -query -text deviceName`,`floatField -query -value attributesScale`)");
+        setParent..;
+        
+    setParent..;
+    
+    frameLayout -l "Record" -cl false -bv true -bs "in" -cll false;
+        
+        rowLayout -nc 2;
+            button -label "Record" -command ("recordDevice -device " + `textField -query -text deviceName`);    // Start recording
+            button -label "Stop Record" -command ("recordDevice -device " + `textField -query -text deviceName` + " -state false; applyTake -device " + `textField -query -text deviceName`);    //Stop recording and apply take to se keys
+        setParent..;
+        
+    setParent..;
+    
+    //EXIT BUTTON
+            
+setParent..;
+
+showWindow deviceConnectWindow;
+
+//// CONNECTING TO DEVICE
+
+proc connectToDevice(string $deviceName)
+{
+    int $deviceExists = 0;
+    string $listOfDevices[] = `listInputDevices`;    // Get list of available devices
+    for($element in $listOfDevices)
+        if($element == $deviceName) $deviceExists++;    // Check if our device exists
+    
+    if($deviceExists == 0)    // If device does not exists => connect
+    {
+        defineDataServer -s $deviceName -d $deviceName;
+        print("Device created.\n");
+    }
+    else print("Device already exists\n");    // If device exists do nothing
+}
+
+proc disconnectDevice(string $deviceName)
+{
+    int $deviceExists = 0;
+    string $listOfDevices[] = `listInputDevices`;    // Get list of available devices
+    for($element in $listOfDevices)
+        if($element == $deviceName) $deviceExists++;    // Check if our device exists
+    
+    if($deviceExists == 1)    // If device exists => disconnect
+    { 
+        defineDataServer -u -d $deviceName;
+        print("Device disconnected.\n");
+    }    
+    else print("Nothing to do.\n");    // If device does not exists do nothing
+}
+proc createDeviceAttributes(string $devaceName, float $attrScale)
+{
+    string $devAttribLs[] = `listInputDeviceAxes $devaceName`;    // List all available device Axes - translation, rotation etc.
+    print($devAttribLs);
+    int $devLocCount = `size($devAttribLs)`/2;    // Divide by 2 to get number of locators that we need (our server sends only X and Y axes - px and py)
+    int $counter = 1;
+    
+    for($counter = 1; $counter <= $devLocCount; $counter++)    // Loop for creating and naming locators. If locator exists, do nothing.
+    {   
+        if(`objExists ("devLoc_" + $counter)`) print("Object devLoc_" + $counter + " exists - nothing to do.\n");    
+        else 
+        {
+            print("devLoc_" + $counter + " created.\n");
+            spaceLocator -name ("devLoc_" + $counter);
+        }
+        attachDeviceAttr -d $devaceName -axis ("px" + $counter) ("devLoc_" + $counter + ".translateX");    // Attaching axes to locator X attribute.
+        attachDeviceAttr -d $devaceName -axis ("py" + $counter) ("devLoc_" + $counter + ".translateY");    // Attaching axes to locator Y attribute.
+        setAttrMapping -d $devaceName -axis ("px" + $counter) -attribute ("devLoc_" + $counter + ".translateX") -scale $attrScale;    // Scale attribute X
+        setAttrMapping -d $devaceName -axis ("py" + $counter) -attribute ("devLoc_" + $counter + ".translateY") -scale $attrScale;    // Scale attribute Y
+        
+        // SCALE is important, because in many cases server can send huge values. 
+        //FaceCap server send point position in pixel position (higher resolution = higher values) 
+    }
+}

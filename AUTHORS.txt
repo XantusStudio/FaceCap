@@ -1,0 +1,6 @@
+﻿
+Concept, code:	Bartłomiej Marcinkowski ( bartek.marcinkowski[at]xantus.pl )
+
+Requests,MEL,models,testing:	Aleksander Marhall ( aleksander.marhall[at]xantus.pl )
+Support: Xantus S.A. (http://www.xantus.pl/)
+

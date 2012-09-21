@@ -1,0 +1,44 @@
+1.3.4
+-----
+* GitHub release.
+
+1.3.2
+-----
+* Minor fixes.
+* First release package build.
+
+1.3.1
+-----
+* Command line parameters for W/H of captured video.
+
+1.3.0
+-----
+* Added interpolation.
+* Contours smooth.
+
+1.2.0
+-----
+* Counting fixedPos after collecting all the marker points.
+* Changed filter order to cvSmooth -> cvErode.
+
+1.1.2
+-----
+* Fixed empty marker conditions.
+* Fixed filtering (cvErode)
+* Added min/max marker size. 
+* Added simple jitter removal.
+* Extra window with filters toolbox.
+
+1.0.1 
+-----
+* Lame memory leak fix.
+
+1.0.0
+------
+* First working version based on color tracking.
+
+0.1-0.9
+-------
+* First attempt to OpenCV color based tracking (continued as open source).
+* First attempt to communicate with maya :)
+* First attempt to OpenCV shape based tracking (closed).
