@@ -6,7 +6,6 @@
 #define MAX_MARKERS 20
 
 
-
 enum fc_tryb {
     FC_INIT,
     FC_PREV,
@@ -24,42 +23,42 @@ enum fc_mayaServ {
     FCM_MAX
 };
 
-//rozdzialka
+//cam resolution
 int maxX;
 int maxY;
 
-//tryb pracy programu
+//current mode
 int tryb;
-//status servera
+//server status
 int serverStatus;
-//status klienta
+//client status
 int clientStatus;
 
-//nosek
+//p0 (nose point :)
 int punktZero;
 
-//tmp markery
+//tmp markers
 vec2_t t_marker[MAX_MARKERS];
-//zakres filtra HSV
+//HSV filters
 int h1,s1,v1,h2,s2,v2;
 //jitter removal
 int jitter;
-//rozmiary markera
+//markers size
 int mminx,mminy,mmaxx,mmaxy;
-//rozmycie
+//blur
 int fcBlur;
-//erozja
+//erode
 int fcErode;
-//kolejnosc filtra
+//filter order
 int fcOrder;
-//inerpolacja
+//inerpolation
 int interpolacja;
-//kontury
+//contours
 int levels;
 
 
-//byt markera
+//marker entity
 fc_entity_t fc_entity[MAX_MARKERS];
 
-//socket klienta majki
+//socket for Maya client
 int client_fd;

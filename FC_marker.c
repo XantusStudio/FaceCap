@@ -1,6 +1,6 @@
 #include "FC_global.h"
 
-//inicjalizacja tabeli markerow
+//markers table init
 void fc_InitMarkers(void) {
     int i;
     for (i=0;i<MAX_MARKERS;i++) {
@@ -15,7 +15,7 @@ void fc_InitMarkers(void) {
     }
 }
 
-//ustalanie punktu p0
+//set p0
 int fc_BasePoint(vec2_t v) {
     if(strlen(fc_entity[0].name)>0) {
 	fc_VectorCopy(v,fc_entity[0].curPos);
@@ -25,9 +25,9 @@ int fc_BasePoint(vec2_t v) {
     }
 }
 
-//zapisanie wsolrzednych w curPos,lastPos i fixed
-//1.3.0 - najwieksza zmiana:
-//- interpolacja 
+//store coords in curPos,lastPos i fixed
+//1.3.0 - added:
+//- interpolation
 //
 void fc_SetEntity(int n,vec2_t v) {
     vec2_t tmp;
@@ -48,22 +48,22 @@ void fc_SetEntity(int n,vec2_t v) {
 		tmp[1] = (fc_entity[n].curPos[1] + v[1] + fc_entity[n].lastPos[1])/3;
 	    }
 	}
-	//backup ostatniej pozycji
+	//backup last pos
 	fc_VectorCopy(fc_entity[n].curPos,fc_entity[n].lastPos);
-	// nowe wspolrzedne do cur
+	// new coords into cur
 	if(tmp[0]!=0 && tmp[1]!=0) {
 	    fc_VectorCopy(tmp,fc_entity[n].curPos);
 	}else {
 	    fc_VectorCopy(v,fc_entity[n].curPos);
 	}
-	// i wartosc fixedPos (p0-p[n])
+	// and fixedPos (p0-p[n])
 	if(n==0) { 
 	    fc_entity[n].fixedPos[0]=0;
 	    fc_entity[n].fixedPos[1]=0;
 	}
 //	printf("[%d] [%f,%f],[%f,%f],[%f,%f]\n",n,fc_entity[n].lastPos[0],fc_entity[n].lastPos[1],fc_entity[n].curPos[0],fc_entity[n].curPos[1],v[0],v[1]);
 	//1.2.0
-	//fixedPos na koncu liczone
+	//fixedPos at the end 
 	//else {
 	//    fc_VectorSub(fc_entity[0].curPos,fc_entity[n].curPos,fc_entity[n].fixedPos);
 	//}
@@ -73,14 +73,14 @@ void fc_SetEntity(int n,vec2_t v) {
 //1.2.0
 void fc_CalcFixedPos(void) {
     int i;
-    //pomijamy p0
+    //skip p0
     for (i=1;i<MAX_MARKERS;i++) {
 	if(fc_entity[i].isFound==1)
 	    fc_VectorSub(fc_entity[0].curPos,fc_entity[i].curPos,fc_entity[i].fixedPos);
     }
 }
 
-//czysci status markerow
+//clear markers status
 void fc_ClearMarkerStatus(void) {
     int i;
     for (i=0;i<MAX_MARKERS;i++) {
@@ -88,8 +88,7 @@ void fc_ClearMarkerStatus(void) {
     }
 }
 
-//i to ciekawa funkcja wlasnie
-// szuka najblizszego markera
+//nice function to find closest marker
 int fc_FindEntity(vec2_t v) {
     int i;
     int nearest,dist,t_dist;

@@ -1,25 +1,25 @@
-// struktura bytu markera
+//markers entity 
 //
 //
 typedef struct {
-    int number; // numer ID
-    char name[20]; //nazwa dla majki
-    int isFound; // czy w danej petli znaleziono cos
-    vec2_t curPos; // pozycja na ekranie
-    vec2_t lastPos; // poprzednia pozycja na ekranie
-    vec2_t fixedPos; // przeliczona pozycja wzgledem punku bazowego
-		     // jesli bazowy to 0,0
+    int number; //ID
+    char name[20]; //Maya's name
+    int isFound; // is found in current loop
+    vec2_t curPos; // screen pos
+    vec2_t lastPos; // last screen pos
+    vec2_t fixedPos; // fixed pos p0 based
+		     // if p0 then it's always <0,0>
 } fc_entity_t;
 
-//inicjalizacja markerow
+//markers init
 void fc_InitMarkers(void);
-// init punktu bazowego
+//p0 init
 int fc_BasePoint(vec2_t v);
-//czysci status makerow
+//clear markers
 void fc_ClearMarkerStatus(void);
-// ustalanie wsp dla ent
+// entity coords
 void fc_SetEntity(int n,vec2_t v);
 //1.2.0
 void fc_CalcFixedPos(void);
-//ciekawa funkcja zlepiajace wspolrzedne
+//really nice trick here 
 int fc_FindEntity(vec2_t v);

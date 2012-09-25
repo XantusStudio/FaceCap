@@ -1,7 +1,7 @@
-// w sumie rip kodu z SDK majki
+// mostly ripped from Maya SDK
 #include "FC_maya.h"
 
-//taki pseudo init
+//init or smtg :)
 void fc_InitMayaServer(char *nazwa) {
     char *cptr;
     cptr = strrchr(nazwa, '/');
@@ -9,20 +9,16 @@ void fc_InitMayaServer(char *nazwa) {
     else strcpy(program, nazwa);
     serverStatus=FCM_STOP;
 }
-
-//pozniej zrobie to na forku 
 void fc_StartMayaServer(void) {
     client_fd = CapServe(server_name);
     if(client_fd>0) serverStatus=FCM_ACTIVE;
     base_timeout.tv_sec  = 0;
     base_timeout.tv_usec = 0;
 }
-//samo sie wyjasnia o co kaman
 void fc_StopMayaServer(void) {
     closesocket(client_fd);
     client_fd = -1;
 }
-//obsluga klienta
 int fc_Klient(void) {
     CapCommand cmd;
     char ruser[64], rhost[64], realhost[64];
@@ -34,7 +30,7 @@ int fc_Klient(void) {
     timeout.tv_sec  = base_timeout.tv_sec;
     timeout.tv_usec = base_timeout.tv_usec;
     status = select(FD_SETSIZE, &rd_fds, NULL, NULL, &timeout);
-    if(status==0) return 1; //poprostu timeout
+    if(status==0) return 1; //timeout
     else if(status>0){
 
     cmd = CapGetCommand(client_fd);
@@ -53,7 +49,7 @@ int fc_Klient(void) {
         case CAP_CMD_VERSION:
             status = CapVersion(client_fd, program, "1.3.4","Xantus FaceCap server");
             break;
-        //odpytka o kanalki
+        //ask for channels
 	case CAP_CMD_INFO:
             if (!channels_created) {
         	status = create_channels();
@@ -74,7 +70,7 @@ int fc_Klient(void) {
 
 }
 
-//wysyla dane
+//send data
 static void get_data(void) {
     int i;
     for (i=0;i<MAX_MARKERS;i++) {
@@ -87,7 +83,7 @@ static void get_data(void) {
 }
 
 
-//tworzy kanaly tylko dla aktywnych markerow
+//create channels after markers beeing initialized
 static int create_channels(void) {
     int i;
     char opis[50];

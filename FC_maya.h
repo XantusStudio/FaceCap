@@ -13,20 +13,19 @@
 #include "FC_global.h"
 #define closesocket close
 
-//ponizej definicje zywcem z sdka majki
+//taken from Maya SDK
 static char program[80];
 static char *server_name = program;
 static CapChannel px[MAX_MARKERS],py[MAX_MARKERS];
 static void get_data(void);
 static int create_channels(void);
 
-struct timeval base_timeout, timeout; //timeout do socketu klienta (dalem 0 bo bez jaj)
-//info czy kanaly zrobilismy
+struct timeval base_timeout, timeout; //timeout for socket (0)
+//channels info
 static int channels_created = 0;
 
-//init nazy serwa z nazwy pliku
+//init server name 
 void fc_InitMayaServer(char *nazwa);
-//sraka z autodeska
 void fc_StartMayaServer(void);
-//obsluga klienta
+//do client
 int fc_Klient(void);

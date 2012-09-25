@@ -1,9 +1,7 @@
-// wszystkie poniższe funkcje wziete z kodu Quake3Arena :)
-// jest GPL wiec można
+// all the functions taken from Quake3Arena :) long live JC!
 #include "FC_math.h"
 //
-//dlugosc vectora od pana
-//pitagorasa
+//lentgh from Pitagoras
 //
 float fc_VectorLength(vec2_t v) {
     int i;
@@ -18,8 +16,8 @@ float fc_VectorLength(vec2_t v) {
     return length;
 }
 //
-// odleglosc miedzy vectorami
-// :dlugosc(v1-v2) 
+// dstance
+// :length(v1-v2) 
 //
 float fc_VectorDistance(vec2_t v1, vec2_t v2) {
     vec2_t dir;

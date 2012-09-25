@@ -2,35 +2,35 @@
 #include "cv.h"
 #include "highgui.h"
 
-CvCapture* capture; //kamerka
-IplImage* frame; //ramka z kamerki
-IplImage* imgYellowThresh; //wyciete z hsv
+CvCapture* capture; //camera
+IplImage* frame; //camera frame
+IplImage* imgYellowThresh; //hsv
 IplImage* imgHSV; // hsv 
-IplImage* imgThreshed; //rozmyte i wyciete z hsv
+IplImage* imgThreshed; //hsv
 
-CvMemStorage* storage; // kontener dla info o konturach
-CvSeq* contours; // 1-szy stopien konturowania
-CvSeq* contours2; // 2-gi stopien konturowania
+CvMemStorage* storage; // contour container
+CvSeq* contours; // 1st contour grade
+CvSeq* contours2; // 2nd contour grade
 
 
-//pkt myszki
+//mouse pt
 CvPoint pt;
-//fonty
+//fonts
 CvFont font;
 CvFont font1;
 
 
-//konwersja do HSV , rozmycie 
+//convert to HSV, blur
 IplImage* GetThresholdedImage(IplImage* img);
-// oblsuga myszki
+// mouse 
 void onMouse( int event, int x, int y, int flags, void* param );
-//ladnie ramke wez
+//get frame
 void fc_GetFrame(void);
-//init tez zrob ladnie
+//init 
 int fc_InitOpenCV(void);
-//pisanie po ekranie
+//text
 void fc_PutText (IplImage *image,int x, int y,char *text,int size,int r,int g,int b);
-//update displa
+//update display
 void fc_UpdateDisplay(void);
-// ladny hud
+// hud
 void fc_MakeHUD(void);

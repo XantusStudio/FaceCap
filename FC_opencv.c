@@ -1,10 +1,9 @@
 #include "FC_global.h"
 
-//konwertuje obraz do HSV i robi mocne rozmycie
+//convert to HSV and hard blur
 IplImage* GetThresholdedImage(IplImage* img) {
 	cvCvtColor(img, imgHSV, CV_BGR2HSV);
         cvInRangeS(imgHSV, cvScalar(s1, v1, h1,1), cvScalar(s2, v2, h2,1), imgThreshed);
-//1.2.0
 	if(fcBlur<1) fcBlur=1;
 	if(fcBlur % 2 != 1) fcBlur++;
 	if(fcOrder)cvSmooth(imgThreshed,imgThreshed,CV_GAUSSIAN, fcBlur,fcBlur ,0,0);
@@ -21,7 +20,7 @@ void fc_ClearMouse(void){
     pt.y=-1;
 }
 
-//myszka
+//mouse
 void onMouse( int event, int x, int y, int flags, void* param )
 {
     if( event == CV_EVENT_LBUTTONDOWN )
@@ -31,7 +30,7 @@ void onMouse( int event, int x, int y, int flags, void* param )
     }
 }
 
-//trackuj markery
+//track markers
 void fc_TrackMarkers(void) {
     vec2_t v1,v2;
     char boxsize[20];
@@ -43,26 +42,25 @@ void fc_TrackMarkers(void) {
     //
     storage = cvCreateMemStorage(0);
 
-    //szuka konturow na wyfiltrowanym obrazie
+    //find contours in filtered image
     cvFindContours( imgYellowThresh, storage, &contours, sizeof(CvContour),CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0) );
-    //upraszcza kontury
-
+    //simplify contours
     if(contours!=0)
 	contours2 = cvApproxPoly(contours, sizeof(CvContour),storage,CV_POLY_APPROX_DP,levels,1);
     if(contours2!=0 && levels>0)
     cvDrawContours( frame, contours2, CV_RGB(255,0,0), CV_RGB(0,255,0), levels,3, CV_AA, cvPoint(1,1) );
 
-    //robi "bound rect" wokolo konturow
+    //do "bound rect" with contours
     if(contours!=0) {
 	for( ; contours2!= 0;  contours2 =  contours2->h_next ) {
 	    rect = cvBoundingRect(contours2, 0);
 	    pt1.x = rect.x + (rect.width/2);
 	    pt1.y = rect.y + (rect.height/2);
-	    //jesli box > min marker size (5) tzn ze marker
+	    //if box > min marker size (5) = it's marker
 	    if(rect.width > mminx && rect.height > mminy && rect.width  <mmaxx && rect.height < mmaxy )  {
 		t_marker[ile][0]=pt1.x;
 		t_marker[ile][1]=pt1.y;
-		//krzyzyki dla FC_TRACK
+		//cross for FC_TRACK
 		if(tryb!=FC_MOCAP) {
 		    cvLine(frame, cvPoint(pt1.x-3, pt1.y), cvPoint(pt1.x+3,pt1.y), cvScalar(0,255,255,1), 5,8,0);
         	    cvLine(frame, cvPoint(pt1.x, pt1.y-3), cvPoint(pt1.x, pt1.y+3), cvScalar(0,255,255,1), 5,8,0);
@@ -76,7 +74,7 @@ void fc_TrackMarkers(void) {
 		    v1[1] = pt1.y;
 		    v2[0] = pt.x;
 		    v2[1] = pt.y;
-		    //jesli kliknelismy w odleglosci < 10 od punktu tzn ze punkt 0 i ze mozna cisnac dalej
+		    //if clicked distance < 10 from point then point is p0 
 		    if(fc_VectorDistance(v1,v2) < 10) {
 			fc_entity[0].isFound = 1;
 			fc_BasePoint(v1);
@@ -84,7 +82,7 @@ void fc_TrackMarkers(void) {
 			punktZero = ile;
 			}
 		} else if(tryb == FC_MOCAP) {
-			//mamy p0 i lecimy
+			//so p0 and go on
 			isFound = fc_FindEntity(t_marker[ile]);
 			if(isFound>=0) fc_entity[isFound].isFound = 1;
 		}
@@ -92,7 +90,7 @@ void fc_TrackMarkers(void) {
 	    }
 	}
 
-	//dokonczenie wybierania markerow po oznaczeniu p0
+	//got p0 then auto find others
 	if(tryb==FC_MARK) {
 		j=1;
 		for(i=0;i<ile;i++) {
@@ -109,7 +107,7 @@ cvReleaseMemStorage(&storage);
 
 }
 //
-//init okien i dewajsa
+//init window and device
 //
 int fc_InitOpenCV(void) {
 
@@ -135,7 +133,7 @@ int fc_InitOpenCV(void) {
     cvNamedWindow("FaceCap filter",0);
     cvNamedWindow("FaceCap marker",0);
 
-    //default filtra dla rozowego markera :)
+    //default filter for pink marker
     s1=96;
     s2=255;
     h1=125;
@@ -179,7 +177,7 @@ int fc_InitOpenCV(void) {
     contours2 = 0;
     return 1;
 }
-//get frame z kamerki
+//get frame from camera
 void fc_GetFrame(void) {
     frame = cvQueryFrame(capture);
     if(frame) {
@@ -188,7 +186,7 @@ void fc_GetFrame(void) {
 	imgYellowThresh = GetThresholdedImage(frame);
     }
 }
-//pisanie po ekranie
+//draw text
 void fc_PutText (IplImage *image,int x, int y,char *text,int size,int r,int g,int b) {
     CvFont t_font;
     if (size!=0) t_font = font1;
@@ -247,14 +245,14 @@ void fc_MakeHUD(void) {
 	if(tryb == FC_MOCAP)
 	for(i=0;i<MAX_MARKERS;i++) {
 		if(fc_entity[i].curPos[0]!=0 && fc_entity[i].curPos[1]!=0) {
-		    //klasycznie rysujemy z p0 do p[i] linie
+		    //draw lines from p0 to p[i]
 		    cvLine(frame, cvPoint(fc_entity[0].curPos[0], fc_entity[0].curPos[1]), cvPoint(fc_entity[i].curPos[0],fc_entity[i].curPos[1]), cvScalar(255,0,0,1), 1,8,0);
-		    //jesli znaleziony w tej kolecje petli to spoko a jesli nie o na czerwono go 
+		    //if not found (not visible) then store and draw in red
 		    if(fc_entity[i].isFound>0)
 			cvCircle(frame, cvPoint(fc_entity[i].curPos[0],fc_entity[i].curPos[1]), 6, cvScalar(0,100,255,1), 2, CV_AA,0);
 		    else 
 			cvCircle(frame, cvPoint(fc_entity[i].curPos[0],fc_entity[i].curPos[1]), 8, cvScalar(50,0,255,1), 8, CV_AA,0);
-		    //info ladne co i gdzie
+		    //info
 		    fc_PutText(frame,fc_entity[i].curPos[0]+7,fc_entity[i].curPos[1],fc_entity[i].name,1,255,0,0);
 		    fc_PutText(frame,fc_entity[i].curPos[0]+6,fc_entity[i].curPos[1]-1,fc_entity[i].name,1,255,255,0);
 		}

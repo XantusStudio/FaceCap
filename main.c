@@ -1,8 +1,8 @@
 /* 
 
-	= FaceCap v1.3.2 - Realtime Face Mocap Server for Maya = 
-	(c) 2012 Xantus S.A.
-	Check README.txt for details.
+	= FaceCap v1.3.4 - Realtime Face Mocap Server for Maya = 
+	2012 Xantus S.A.
+	Check README.md for details.
 
 */
 
@@ -10,7 +10,7 @@
 #include "FC_global.h"
 
 void main(int argc, char **argv) {
-    int loopHack; // potrzebne do updatu statusu na glownym oknie
+    int loopHack; // main window update
 
     tryb = FC_INIT;
     loopHack=0;
